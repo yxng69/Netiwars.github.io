@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar IP</title>
+</head>
+<body>
+    <h1>Obteniendo tu IP...</h1>
+    <script>
+        async function obtenerIP() {
+            try {
+                // Obtener la IP pública
+                let respuesta = await fetch("https://api.ipify.org?format=json");
+                let data = await respuesta.json();
+                let ip = data.ip;
+
+                // Obtener más información de ubicación
+                let info = await fetch(`https://ipinfo.io/${ip}/json`);
+                let ubicacion = await info.json();
+
+                // Enviar los datos al servidor
+                let response = await fetch("http://192.168.100.5:3000/guardar-info", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ ip, ubicacion })
+                });
+
+                let resultado = await response.json();
+                document.body.innerHTML = `<h1>${resultado.message}</h1>`;
+            } catch (error) {
+                document.body.innerHTML = `<h1>Error al obtener la IP</h1>`;
+                console.error("Error:", error);
+            }
+        }
+
+        obtenerIP();
+    </script>
+    <script type="module">
+
+        // Import the functions you need from the SDKs you need
+      
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+      
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-analytics.js";
+      
+        // TODO: Add SDKs for Firebase products that you want to use
+      
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+      
+        // Your web app's Firebase configuration
+      
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      
+        const firebaseConfig = {
+      
+          apiKey: "AIzaSyBKchpxFTS6D_qzsjRMyNQoZj2CACwUBoM",
+      
+          authDomain: "pajerolacho.firebaseapp.com",
+      
+          projectId: "pajerolacho",
+      
+          storageBucket: "pajerolacho.firebasestorage.app",
+      
+          messagingSenderId: "693211434668",
+      
+          appId: "1:693211434668:web:d38e51ab43aa14764c1909",
+      
+          measurementId: "G-4J32R9Q9CW"
+      
+        };
+      
+      
+        // Initialize Firebase
+      
+        const app = initializeApp(firebaseConfig);
+      
+        const analytics = getAnalytics(app);
+      
+      </script>
+</body>
+</html>
